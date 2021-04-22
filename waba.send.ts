@@ -49,6 +49,38 @@ export class Sender{
 			params[name+"_Array"].push(value)
 		}
 
+        if(params.group){
+
+            console.info(`[LOG] Buscando el grupo ${params.group}`)
+            try{
+                let response = await axios({
+                    method:'POST',
+                    url: `${this.apiUrl}whatsapp/chats`,
+                    data: {
+                        key: 'cdf1e26d3ed5ab309b38dacbed7a74821a0cc5ed',
+                        query: {
+                            name: params.group,
+                            isGroup: true
+                        }
+                    }
+                })
+                if(!response.data.length){
+                    console.error(`[ERROR] Failed to find group with name: ${params.group}`)
+                    return 
+                }
+                params.chatId = response.data[0].id.uid
+            }catch(e){
+                if(e.response && e.response.data && e.response.data.error){
+                    e = Exception.create(e.response.data.error.message).putCode(e.response.data.error.code)
+                }
+                throw e
+            }
+
+            console.error(`[INFO] Group '${params.group}' has the id: ${params.chatId}`)
+            if(!params.text && !params.file) return 
+
+        }
+
 		if(params.key){
 			if(params.text_Array){
 				let text = params.text_Array.join("\n")
@@ -113,6 +145,7 @@ export class Sender{
 	async sendMessage(message: Message){
 
 		try{
+            if(message.chatId) delete message.number 
 			let response = await axios({
 				method:'POST',
 				url: `${this.apiUrl}instances/whatsapp/message.send`,
