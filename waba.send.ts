@@ -36,17 +36,24 @@ export class Sender{
 		let params:any = {}, orderedParams = []
 		for(let i=1;i<kawix.appArguments.length;i++){
 			let arg = kawix.appArguments[i]
-			let parts = arg.split("=")
-			let name = parts[0].substring(2)
+			
+			if(arg.startsWith("--")){
+				let parts = arg.split("=")
+				let name = parts[0].substring(2)
 
-			let value = parts[1] || ''
-			orderedParams.push({
-				name,
-				value
-			})
-			params[name] = value
-			params[name+"_Array"] = params[name+"_Array"] || []
-			params[name+"_Array"].push(value)
+				let value = parts[1] || ''
+				orderedParams.push({
+					name,
+					value
+				})
+				params[name] = value
+				params[name+"_Array"] = params[name+"_Array"] || []
+				params[name+"_Array"].push(value)
+			}
+			else{
+				params.values = params.value || []
+				params.values.push(arg)
+			}
 		}
 
         if(params.group){
@@ -82,6 +89,14 @@ export class Sender{
         }
 
 		if(params.key){
+			
+			if(!params.number && !params.text && !params.file){
+				params.values = params.values || []
+				params.number = params.values[0]
+				params.text_Array = [params.values[1]]
+				params.file_Array = [params.values[2]]
+			}
+			
 			if(params.text_Array){
 				let text = params.text_Array.join("\n")
 				let message:Message = {
@@ -106,6 +121,7 @@ export class Sender{
 					let message:Message = {
 						key:params.key,
 						number: params.number,
+						caption: params.caption,
 						chatId:params.chatId
 					}
 
