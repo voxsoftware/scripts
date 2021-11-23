@@ -121,7 +121,7 @@ export class Sender{
 					let message:Message = {
 						key:params.key,
 						number: params.number,
-						caption: params.caption,
+						caption: (params.caption_Array || []).join("\n"),
 						chatId:params.chatId
 					}
 
