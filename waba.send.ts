@@ -108,7 +108,7 @@ export class Sender{
 				try{
 					console.info(`[LOG] Sending message to: ${params.chatId || params.number}`)
 					let data = await this.sendMessage(message)
-					console.info(`[INFO] Message sent with id: ${data.cid}`)
+					console.info(`[INFO] Message sent with id: ${data.uid}`)
 
 				}catch(e){
 					console.error(`[ERROR] Failed sent: ${e.message}, code: ${e.code || "NONE"}`)
@@ -128,7 +128,7 @@ export class Sender{
 					try{
 						console.info(`[LOG] Sending message to: ${params.chatId || params.number}`)
 						let data = await this.sendMessageFile(message, file)
-						console.info(`[INFO] Message sent with id: ${data.cid}`)
+						console.info(`[INFO] Message sent with id: ${data.uid}`)
 
 					}catch(e){
 						console.error(`[ERROR] Failed sent: ${e.message}, code: ${e.code || "NONE"}`)
