@@ -1,14 +1,11 @@
-
-import 'gh+/kodhework/kawix@std0.9.12/std/dist/register.js'
-
 import 'npm://axios@0.21.1'
 import axios from 'axios'
 
 import 'npm://mime-types@2.1.29'
 import mimeType from 'mime-types'
 
-import fs from '/virtual/@kawix/std/fs/mod'
-import Exception from '/virtual/@kawix/std/util/exception'
+import fs from 'fs'
+import {Exception} from 'gh+/kwruntime/std@1.1.4/util/exception.ts'
 import Path from 'path'
 
 
@@ -150,7 +147,7 @@ export class Sender{
 			file = file.substring(0,file.length - 1)
 		}
 		let type = mimeType.lookup(file) || 'application/octect-stream'
-		let base64 = await fs.readFileAsync(file, 'base64')
+		let base64 = await fs.promises.readFile(file, 'base64')
 		let dataurl = `data:${type};base64,${base64}`
 		message.base64 =dataurl
 		message.type = "document"
